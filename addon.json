@@ -1,0 +1,11 @@
+{ 
+"title"		:	"Replace hl2 props to breakable props", 
+"type"		:	"model", 
+"tags"		:	[ "fun", "realism" ], 
+"ignore"	: 
+[ 
+"*.psd", 
+"*.vcproj", 
+"*.svn*" 
+] 
+} 
