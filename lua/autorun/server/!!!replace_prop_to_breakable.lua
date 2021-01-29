@@ -463,6 +463,8 @@ hook.Add( "EntityTakeDamage", hookIndex.."Door_EntityTakeDamage", function( ent,
                 doors_save[ent.doorIndex].spawn = true;
                 ent.propBreakableDoorHp = 150;
 
+                door:TakeDamageInfo( dmg );
+
                 local respawn = {};
                 respawn.door = function( door, break_door )
                     if ( IsValid( break_door ) ) then
