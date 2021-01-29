@@ -8,6 +8,7 @@
 		"*.vcproj*", 
 		"*.svn*",
 		"*.git*",
+		"*.vscode*",
 		"LICENSE",
 		"README.md"
 	]
