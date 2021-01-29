@@ -33,6 +33,7 @@ concommand.Add( "breakprops_localcvars_active", function( ply, command, args )
         file.Write( "rpb_data/" .. uid64 .. "/breakprops_localcvars_active.dat", "0" );
     end;
 end );
+
 concommand.Add( "breakprops_change_playerspawn_prop_local", function( ply, command, args )
     local uid64 = "single_player";
     
@@ -41,15 +42,19 @@ concommand.Add( "breakprops_change_playerspawn_prop_local", function( ply, comma
     end;
 
     if ( args[ 1 ] == nil ) then
-        local arg = file.Read( "rpb_data/" .. uid64 .. "/breakprops_localcvars_active.dat", "DATA" );
+        local arg = file.Read( "rpb_data/" .. uid64 .. "/breakprops_change_playerspawn_prop.dat", "DATA" );
         local description = "Enables or disables the creation of player destructible objects, if the variable on the server is negative.";
 
-        ply:SendLua( [[ MsgN( "breakprops_localcvars_active = ]] .. arg .. [[" ) ]] );
+        ply:SendLua( [[ MsgN( "breakprops_change_playerspawn_prop = ]] .. arg .. [[" ) ]] );
         ply:SendLua( [[ MsgN( "Description:" ) ]] );
         ply:SendLua( [[ MsgN( "Description: ]] .. description .. [[" ) ]] );
     end;
-    
+
     if ( file.Read( "rpb_data/" .. uid64 .. "/breakprops_localcvars_active.dat", "DATA" ) == "0" ) then
+        return; 
+    end;
+    
+    if ( file.Read( "rpb_data/" .. uid64 .. "/breakprops_change_playerspawn_prop.dat", "DATA" ) == "0" ) then
         return; 
     end;
     
@@ -70,6 +75,7 @@ end;
 
 local function getReplaceModel( model )
     local new_model = nil;
+
     if ( string.sub( model, 8, 16 ) == "props_c17" ) then
         new_model = "models/nseven/" .. string.sub( model, 18 );
     elseif ( string.sub( model, 8, 17 ) == "props_junk" ) then
@@ -80,15 +86,18 @@ local function getReplaceModel( model )
         new_model = "models/nseven/" .. string.sub( model, 24 );
     elseif ( string.sub( model, 8, 22 ) == "props_interiors" ) then
         new_model = "models/nseven/" .. string.sub( model, 24 );
+    elseif ( string.sub( model, 8, 20 ) == "props_combine" ) then
+        new_model = "models/nseven/" .. string.sub( model, 22 );
     elseif ( string.sub( model, 8, 21 ) == "props_vehicles" ) then
         new_model = "models/nseven/" .. string.sub( model, 23 );
     elseif ( string.sub( model, 8, 25 ) == "props_trainstation" ) then
         new_model = "models/nseven/" .. string.sub( model, 27 );
     elseif ( string.sub( model, 8, 21 ) == "props_borealis" ) then
         new_model = "models/nseven/" .. string.sub( model, 23 );
-    elseif ( string.sub( model, 1, 6 ) == "models" ) then
-        new_model = "models/nseven/" .. string.sub( model, 8 );
+    elseif ( string.sub( model, 8, 27 ) == "props_phx/construct/" ) then
+        new_model = "models/nseven/" .. string.sub( model, 28, string.len( model ) );
     end;
+    
     return new_model;
 end;
 
@@ -862,7 +871,7 @@ CreateConstraintFromEnts = function( ply, Original_EntList )
                     end;
                 end;
 
-                constraint.Axis( Ent1, Ent2, Bone1, Bone2, LocalPos, Forcelimit, Torquelimit, NoCollide );
+                constraint.Ballsocket( Ent1, Ent2, Bone1, Bone2, LocalPos, Forcelimit, Torquelimit, NoCollide );
             end;
         end;
         -- Create Elastic constraint
